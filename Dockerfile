@@ -15,6 +15,13 @@ RUN logstash-plugin install logstash-output-jdbc
 # 将当前文件夹下的所有文件全部复制到工作目录
 #COPY ./ ./
 
+# 执行命令
+RUN mkdir -p /usr/share/logstash/vendor/jar/jdbc/
+RUN cd /tmp
+RUN wget https://dev.mysql.com/get/archives/mysql-connector-java-5.1/mysql-connector-java-5.1.36.tar.gz
+RUN tar -zxvf mysql-connector-java-5.1.36.tar.gz
+RUN cp mysql-connector-java-5.1.36/mysql-connector-java-5.1.36-bin.jar /usr/share/logstash/vendor/jar/jdbc/ -f
+
 # 向外界暴露8001端口
 EXPOSE 9600
 EXPOSE 8514
