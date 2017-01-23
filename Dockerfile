@@ -4,10 +4,10 @@
 FROM daocloud.io/library/logstash:5.1-alpine
 
 # 进入docker中的/usr/local/src目录
-RUN cd /usr/share/logstash
+RUN cd /usr/share/logstash/bin
 
 # 创建WeShop.Api目录
-RUN bin/logstash-plugin install logstash-output-jdbc
+RUN logstash-plugin install logstash-output-jdbc
 
 # 设置工作路径
 #WORKDIR /usr/local/src/WeShop.Api
