@@ -18,7 +18,7 @@ RUN logstash-plugin install logstash-output-jdbc
 # 执行命令
 RUN mkdir -p /usr/share/logstash/vendor/jar/jdbc/
 RUN cd /usr/share/logstash/vendor/jar/jdbc/
-RUN wget http://task.bf-soft.com/mysql-connector-java-5.1.36-bin.jar
+RUN wget http://task.bf-soft.com/files/mysql-connector-java-5.1.36-bin.jar
 #RUN tar -zxvf mysql-connector-java-5.1.36.tar.gz
 #RUN cp mysql-connector-java-5.1.36/mysql-connector-java-5.1.36-bin.jar /usr/share/logstash/vendor/jar/jdbc/ -f
 
