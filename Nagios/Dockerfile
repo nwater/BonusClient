@@ -1,5 +1,5 @@
 #基础镜像
-FROM daocloud.io/library/centos:7.2.1511
+FROM daocloud.io/library/centos:latest
 
 #更新
 RUN yum upgrade
