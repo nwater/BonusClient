@@ -2,7 +2,7 @@
 FROM daocloud.io/library/centos:7.2.1511
 
 #更新
-RUN yum update -y
+RUN yum upgrade
 
 #安装基础软件
 RUN yum install -y wget gcc glibc glibc-common gd gd-devel xinetd openssl-devel perl unzip zip
