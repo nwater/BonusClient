@@ -1,30 +1,58 @@
-# WeShop.Api
+#基础镜像
+FROM daocloud.io/library/centos:7.2.1511
 
-# 基于microsoft/dotnet:latest构建Docker Image
-FROM daocloud.io/library/logstash:5.1-alpine
+#安装基础软件
+RUN yum install -y wget gcc glibc glibc-common gd gd-devel xinetd openssl-devel perl unzip zip
 
-# 进入docker中的/usr/local/src目录
-RUN cd /usr/share/logstash/bin
+#安装Apache php
+RUN yum -y install httpd php php-fpm php-mysql
+#安装Apache扩展包
+RUN yum -y install httpd-manual mod_ssl mod_perl mod_auth_mysql
+#安装PHP扩展包
+RUN yum -y install php-gd php-xml php-mbstring php-ldap php-pear php-xmlrpc php-devel
 
-# 创建WeShop.Api目录
-#RUN logstash-plugin install logstash-output-jdbc
+#创建nagios用户和用户组
+RUN useradd -s /sbin/nologin nagios
+RUN mkdir /usr/local/nagios
+RUN chown -R nagios.nagios /usr/local/nagios
 
-# 设置工作路径
-#WORKDIR /usr/local/src/WeShop.Api
+#查看nagios 目录的权限
+RUN ll -d /usr/local/nagios/
 
-# 将当前文件夹下的所有文件全部复制到工作目录
-#COPY ./ ./
+#编译安装Nagios
+RUN wget https://downloads.sourceforge.net/project/nagios/nagios-4.x/nagios-4.3.1/nagios-4.3.1.tar.gz
+RUN tar zxvf nagios-4.3.1.tar.gz
+RUN cd nagios-4.3.1
+RUN ./configure --prefix=/usr/local/nagios
+RUN make all
+RUN make install
+RUN make install-init
+RUN make install-commandmode
+RUN make install-config
+RUN make install-webconf
+RUN chkconfig --add nagios
+RUN chkconfig --level 35 nagios on
+RUN chkconfig --list nagios
 
-# 执行命令
-#RUN mkdir -p /usr/share/logstash/vendor/jar/jdbc/
-#RUN cd /usr/share/logstash/vendor/jar/jdbc/
-#RUN wget http://task.bf-soft.com/files/mysql-connector-java-5.1.36-bin.jar
-#RUN tar -zxvf mysql-connector-java-5.1.36.tar.gz
-#RUN cp mysql-connector-java-5.1.36-bin.jar /usr/share/logstash/vendor/jar/jdbc/ -f
+#验证程序是否被正确安装
+RUN ls /usr/local/nagios
 
-# 向外界暴露8001端口
-#EXPOSE 9600
-#EXPOSE 8514
+#安装Nagios 插件
+RUN cd ..
+RUN wget https://nagios-plugins.org/download/nagios-plugins-2.1.4.tar.gz
+RUN tar zxvf nagios-plugins-2.1.4.tar.gz
+RUN cd nagios-plugins-2.1.4
+RUN ./configure --prefix=/usr/local/nagios
+RUN make && make install
 
-# 执行dotnet WeShop.Api命令
-#CMD ["dotnet", "WeShop.Api.dll"]
+#设置安全认证
+RUN htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin nagiosadmin
+
+#启动服务
+#RUN systemctl enable httpd.service
+#RUN /etc/init.d/httpd restart
+#RUN chkconfig httpd on; chkconfig naigos on
+
+
+# 向外界暴露80端口
+EXPOSE 80
