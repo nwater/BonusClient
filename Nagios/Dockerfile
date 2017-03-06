@@ -5,9 +5,9 @@ FROM daocloud.io/library/centos:7.2.1511
 RUN yum install -y wget gcc glibc glibc-common gd gd-devel xinetd openssl-devel perl unzip zip
 
 #安装Apache php
-RUN yum -y install httpd php php-fpm php-mysql
+RUN yum -y install httpd php php-fpm
 #安装Apache扩展包
-RUN yum -y install httpd-manual mod_ssl mod_perl mod_auth_mysql
+RUN yum -y install httpd-manual mod_ssl mod_perl
 #安装PHP扩展包
 RUN yum -y install php-gd php-xml php-mbstring php-ldap php-pear php-xmlrpc php-devel
 
